@@ -1,0 +1,240 @@
+@database Thermometer.guide
+@Width 80
+@AUTHOR Ian Chapman
+@$VER: Thermometer_Guide V0.3
+
+@node main "Thermometer.guide"
+
+                                Thermometer V0.3
+                  Ian Chapman <ian.chapman@amiga-hardware.com>
+
+                       http://software.amiga-hardware.com
+
+
+                               @{" Disclaimer    " Link "Disclaimer"}
+                               @{" Introduction  " Link "Introduction"}
+                               @{" Usage         " Link "Usage"}
+                               @{" Env Variables " Link "Environment"}
+
+                               @{" FAQ           " Link "FAQ"}
+
+                               @{" History       " Link "History"}
+                               @{" Contact       " Link "Contact"}
+
+@endnode
+
+@node "Disclaimer" "Disclaimer"
+
+                                   DISCLAIMER
+                                   ==========
+
+Use of this software is entirely at your own risk. You accept any consequences
+whatsoever as a result of using this software, whether intentional, accidental,
+or as a result from a defect in the software. This includes, but is not limited
+to, damage to hardware, software or legal actions taken as a direct or indirect
+result of using this software. There is no warranty, either expressed or
+implied.
+
+@endnode
+
+@node "Introduction" "Introduction"
+
+                                  INTRODUCTION
+                                  ============
+
+Thermometer is a small command line program which is capable of reading the
+temperatures of SCSI hard disks which support it. Other types of devices or
+non SCSI devices may work but it's unlikely. Thermometer outputs the temperature
+in both celsius and fahrenheit. Three temperature readings are supported by
+Thermometer. Hard Disks may support none, some or all of the readings.
+
+1. Current Temperature
+   Reported in the firmware's temperature log. This temperature is usually
+   accurate at the moment the request was made.
+
+2. Reference Temperature
+   Reported in the firmware's temperature log. This temperature is the maximum
+   temperature at which the device can perform without degrading the device's
+   operation or reliability beyond manufacturer's specifications. In other words
+   if the current temperature exceeds the reference temperature then your hard
+   drive is likely to fail.
+
+3. Most recent temperature reading.
+   Reported in the firmware's informational exceptions log, this value
+   represents the temperature of the drive when it was last checked.
+
+@endnode
+
+@node "Usage" "Usage"
+
+                                     USAGE
+                                     =====
+
+Synopsis
+--------
+
+@{i}thermometer <device> <unit> <verbose>@{ui}
+
+<device>
+This is the device driver to which the hard disk is attached. For example
+scsi.device, cybppc.device etc.
+
+<unit>
+This is the unit number the drive is attached to. If no unit number is specified
+it defaults to 0
+
+<verbose>
+A flag which produces more detailed output
+
+Examples
+--------
+
+@{i}thermometer cybpcc.device 1@{ui}
+
+@{i}thermometer gvpscsi.device 3@{ui}
+
+@{i}thermometer scsi.device 0 VERBOSE@{ui}
+
+@endnode
+
+@node "Environment" "Environment"
+
+                             ENVIRONMENT VARIABLES
+                             =====================
+
+Thermometer nows sets environment variables holding the raw value of any
+temperatures it has managed to read. This makes it easier to use thermometer
+in scripts or as part of another program. The environment variables correspond
+to the temperature types mentioned earlier in the documentation.
+
+THERM_CUR_C
+Holds the Current Temperature in Celsius
+
+THERM_CUR_F
+Holds the Current Temperature in Fahrenheit
+
+THERM_REF_C
+Holds the Reference Temperarure in Celsius
+
+THERM_REF_F
+Holds the Reference Temperarure in Fahrenheit
+
+THERM_MRR_C
+Holds the Most Recent Reading in Celsius
+
+THERM_MRR_F
+Holds the Most Recent Reading in Fahrenheit
+
+
+If your drive does not support a particular temperature reading then the
+corresponding environment variable will be empty, not zero because zero
+is a valid temperature.
+
+You can check the contents of an enviroment variable from the CLI by typing:
+
+echo $THERM_CUR_C
+
+
+@endnode
+
+@node "FAQ" "FAQ"
+
+                                      FAQ
+                                      ===
+
+1. Will Thermometer work with IDE devices?
+------------------------------------------
+No, but feel free to prove me wrong. As far as I can tell IDE devices report
+their temperature in a fundamentally different way.
+
+
+2. Will you support IDE devices?
+--------------------------------
+Not in the forseeable future. I'm not even certain if this is possible to do
+in an OS friendly way as with SCSI devices.
+
+
+3. Will Thermometer work with devices other than hard disks?
+------------------------------------------------------------
+In theory yes, but only hard disks tend to be fitted with temperature sensors.
+
+
+4. What's the lowest temperature reported?
+------------------------------------------
+The lowest temperature which can be reported is 0C. This is a sensor limit.
+
+
+5. What's the maximum temperature reported?
+-------------------------------------------
+The maximum theoretical temperature is 254C as hard drives would have fried
+themselves long before ever reaching this. This is a sensor limit.
+
+
+6. Thermometer is reporting 255C for my hard drive?
+----------------------------------------------------------
+This is a special condition and not the real temperature of the drive. If you
+see this then it means the temperature sensor on your drive has probably failed.
+
+
+7. What SCSI disks are likely to work?
+--------------------------------------
+Newer hard disks are more likely to be fitted with temperature sensors than
+older hard disks. This typically means drives manufactured in the last 3 years.
+Also hard drives which may be considered "enterprise/server class" are more
+likely to contain temperature sensors than those which may be considered as
+"desktop class".
+
+
+8. My drive has a temperature sensor, but thermometer isn't finding it?
+-----------------------------------------------------------------------
+Some drives, mainly older ones may store the information in a non standard
+location. If the device is a SCSI device, then please send me the full details,
+in particular the drive model and I may be able to add support in a future
+release.
+
+
+9. Thermometer shows more than one current/reference temperature, why?
+----------------------------------------------------------------------
+This may occur if the drive stores its temperature logs in more than one place.
+
+@endnode
+
+@node "Contact" "Contact & Bug Reports"
+
+                                    CONTACT
+                                    =======
+
+For comments or bug reports, please send an E-Mail to:
+
+                ian.chapman@amiga-hardware.com
+
+If you are certain your drive contains a temperature sensor, and Thermometer is
+unable to find it, please send me full details including the drive's model and I
+may be able to add support in the next release.
+
+@endnode
+
+@node "History" "History"
+
+                                    HISTORY
+                                    =======
+
+Version 0.3
+-----------
+
+Thermometer now also defines several environment variables to hold the raw
+temperatures it has read. This makes thermometer easier to use in scripts.
+Thanks to Tomas Hauerland for this suggestion.
+
+Version 0.2
+-----------
+
+Added support for drives which may store their temperature in another location
+which I've labelled as the IBM Temperature Log
+                                    
+Version 0.1
+-----------
+
+Initial Release
+
+@endnode
